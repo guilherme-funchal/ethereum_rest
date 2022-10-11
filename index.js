@@ -17,6 +17,12 @@ const CONTACT_ADDRESS = require('./config');
 const { application } = require('express');
 
 
+app.get('/account', async function(req, res) {
+    var erro = "erro : sem conta"
+    console.log("Não logado: ", res)
+    res.status(200).send(JSON.stringify(erro));
+});
+
 app.get('/dono', async function(req, res) {
     var web3 = new Web3(address);
     var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
@@ -26,9 +32,10 @@ app.get('/dono', async function(req, res) {
         return
       }
       console.log("O dono é: ", res)
-    }); 
+    });
     res.status(200).send(JSON.stringify(owner));
 });
+
 
 app.get('/transacoes', async function(req, res) {
   try {
@@ -38,7 +45,8 @@ app.get('/transacoes', async function(req, res) {
       "TransferSingle",
           { fromBlock: 0, toBlock: 'latest' },
           (err, events) => {
-          res.status(200).send(JSON.stringify(events));
+//        res.status(200).send(JSON.stringify(events));
+          res.status(200).send(events);
           }
       );
     } catch (e) {
@@ -55,18 +63,22 @@ app.get('/saldo', async function(req, res) {
 
   let saldo = await contratoInteligente.methods.balanceOf(conta,"1").call(function (err, res) {
     if (err) {
-      console.log("Ocorreu um erro", err)
+     console.log("Ocorreu um erro", err)
       return
     }
     console.log("Saldo gerado com Sucesso")
   }); 
+  saldo = Web3.utils.fromWei(saldo, 'ether');
   res.status(200).send(JSON.stringify(saldo));
+  console.log(saldo);
 });
 
 app.post('/emitir', async function(req, res) {
   let account = req.body.account;
   let id = req.body.id;
   let amount = req.body.amount;
+  amount = Web3.utils.toWei(amount, 'ether');
+
   let data = req.body.data;
   const network = process.env.ETHEREUM_NETWORK;
   const web3 = new Web3(
@@ -98,6 +110,7 @@ app.post('/queimar', async function(req, res) {
   let account = req.body.account;
   let id = req.body.id;
   let value = req.body.value;
+  value = Web3.utils.toWei(value, 'ether');
   
   const network = process.env.ETHEREUM_NETWORK;
 
@@ -133,6 +146,7 @@ app.post('/transferir', async function(req, res) {
   let to = req.body.to;
   let id = req.body.id;
   let amount = req.body.amount;
+  amount = Web3.utils.toWei(amount, 'ether');	
   let data = req.body.data;
   
   const network = process.env.ETHEREUM_NETWORK;
@@ -195,8 +209,9 @@ app.post('/carimbo', async function(req, res) {
     var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
     let block = await web3.eth.getBlock(bloco);
     let timestamp = block.timestamp;
+    console.log(timestamp);	  
     var date = new Date(timestamp * 1000);
-    res.status(200).send(`${date}`);        
+    res.status(200).send(`${timestamp}`);        
     } catch (e) {
           console.error(e)
     }   
