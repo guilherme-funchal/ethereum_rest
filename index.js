@@ -43,6 +43,7 @@ app.get('/transacoes', async function(req, res) {
     var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
     contratoInteligente.getPastEvents(
       "TransferSingle",
+      "allEvents",
           { fromBlock: 0, toBlock: 'latest' },
           (err, events) => {
 //        res.status(200).send(JSON.stringify(events));
@@ -55,13 +56,13 @@ app.get('/transacoes', async function(req, res) {
 });
 
 app.get('/saldo', async function(req, res) {
-  let conta = req.query.conta;  
+  let conta = req.query.conta; 
+  let wallet = req.query.wallet;
   console.log("conta: ", conta)
 
   var web3 = new Web3(address);
   var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
-
-  let saldo = await contratoInteligente.methods.balanceOf(conta,"1").call(function (err, res) {
+  let saldo = await contratoInteligente.methods.balanceOf(conta,wallet).call(function (err, res) {
     if (err) {
      console.log("Ocorreu um erro", err)
       return
@@ -125,7 +126,7 @@ app.post('/queimar', async function(req, res) {
   web3.eth.accounts.wallet.add(signer);  
   var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
   
-  const tx = contratoInteligente.methods.burn(account,id,value);
+  const tx = contratoInteligente.methods.burn_carbono(account,id,value);
 
   const receipt = await tx
     .send({
