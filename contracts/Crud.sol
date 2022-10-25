@@ -1,44 +1,64 @@
-// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.4;
 
-pragma solidity ^0.7.0;
-
-contract Crud {
-    
-    struct User {
-        uint256 id;
+contract Inventory {
+    struct Product {
+        uint id;
         string name;
+        uint price;
+        uint quantity;
+        bool exists;
+        uint rowIndex;
     }
-    
-    User[] public users;
-    uint256 public nextId = 1;
-    
-    function add(string memory name) public {
-        User memory user = User({id : nextId, name : name});
-        users.push(user);
-        nextId++;
+
+    mapping (uint=>Product) private products;
+    uint[] private productIds;
+    uint private productIdCounter = 0;
+
+    modifier productsMustExist() {
+        require(productIds.length > 0, "Products list is emtpy.");
+        _;
     }
-    
-    function read(uint256 id) public view returns(string memory){
-        uint256 i = find(id);
-        return users[i].name;
+
+    function createProduct(string memory name, uint price, uint initialQuantity) public {
+        productIdCounter++;
+        Product memory newProduct = Product({
+            id: productIdCounter,
+            name: name,
+            price: price,
+            quantity: initialQuantity,
+            exists: true,
+            rowIndex: productIds.length
+        });
+
+        productIds.push(newProduct.id);
+        products[newProduct.id] = newProduct;
     }
-    
-    function update(uint256 id, string memory newName) public {
-        uint256 i = find(id);
-        users[i].name = newName;
+
+    function updateProduct(uint id, string memory name, uint price, uint quantity) public  {
+        require(products[id].exists, "Product with specified id does not exist");
+        Product storage targetProduct = products[id];
+        targetProduct.name = name;
+        targetProduct.price = price;
+        targetProduct.quantity = quantity;
     }
-    
-    function destroy(uint256 id) public {
-        uint256 i = find(id);
-        delete users[i];
+
+    function getProductsLength() public view returns(uint) {
+        return productIds.length;
     }
-    
-    function find(uint256 id) private view returns(uint256){
-        for(uint256 i = 0; i< users.length; i++) {
-            if(users[i].id == id)
-                return i;
-        }
-        revert("User not found");
+
+    function getProductsList() public view returns(uint[] memory) {
+        return productIds;
     }
-    
+
+    function getProductById(uint id) public view productsMustExist returns(uint, string memory, uint, uint, uint) {
+        // Check if product with specified id does exist
+        require(products[id].exists, "Product with specified id does not exist");
+        Product memory product = products[id];
+        return (product.id, product.name, product.price, product.quantity, product.rowIndex);
+    }
+
+    function deleteProduct(uint id) public {
+        delete products[id];
+    }
 }
+
