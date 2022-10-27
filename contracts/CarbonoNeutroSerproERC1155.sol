@@ -1,14 +1,36 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
+import "hardhat/console.sol";
 
 contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC1155Supply {
-    constructor() ERC1155("") {}
+    struct Project {
+        uint projectIdCounter;
+        address projectOwner;
+        address projectApprover;
+        string name;
+        string description;
+        string documentation;
+        string hash_documentation;
+        string state;
+        string area;
+        string creditAssigned;
+        string creationDate;
+        string updateDate;
+    }
+    
+       mapping(uint => Project) private projects;
+       uint[] private projectIds;
+       uint private projectIdCounter = 0;
+
+
+
+    constructor() ERC1155("") {
+    }    
 
     function mint(address account, uint256 id, uint256 amount, bytes memory data)
         public
@@ -24,12 +46,111 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         _mintBatch(to, ids, amounts, data);
     }
 
-    // The following functions are overrides required by Solidity.
-
     function _beforeTokenTransfer(address operator, address from, address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)
         internal
         override(ERC1155, ERC1155Supply)
     {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
-}
+
+    function burn_carbono(address account, uint256 id, uint256 value)
+        public
+        onlyOwner
+    {
+       _burn(account, id, value);
+    }
+
+
+    function setProject(
+        address _projectOwner,
+        address _projectApprover,
+        string memory _name, 
+        string memory _description, 
+        string memory _documentation,
+        string memory _hash_documentation, 
+        string memory _state, 
+        string memory _area, 
+        string memory _creditAssigned, 
+        string memory _creationDate, 
+        string memory _updateDate) public {
+        projectIdCounter++;
+
+        Project memory newProject = Project({
+            projectIdCounter: projectIdCounter,
+            projectOwner: _projectOwner,
+            projectApprover: _projectApprover,
+            name: _name,
+            description: _description,
+            documentation: _documentation,
+            hash_documentation: _hash_documentation,
+            state: _state,
+            area: _area,
+            creditAssigned: _creditAssigned,
+            creationDate: _creationDate, 
+            updateDate: _updateDate
+        });
+
+        projectIds.push(newProject.projectIdCounter);
+        projects[newProject.projectIdCounter] = newProject;
+
+    }
+
+    function getProjectById(uint id) public view returns(
+        uint, string memory, address, address, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory) {
+        Project memory project = projects[id];
+        return (
+            project.projectIdCounter,
+            project.name,
+            project.projectOwner,
+            project.projectApprover,
+            project.description,
+            project.documentation,
+            project.hash_documentation,
+            project.state,
+            project.area,
+            project.creditAssigned,
+            project.creationDate,
+            project.updateDate
+        );
+    }
+
+    function updateProject(
+        address _projectOwner, 
+        address _projectApprover,
+        string memory _name, 
+        string memory _description, 
+        string memory _documentation,
+        string memory _hash_documentation, 
+        string memory _state, 
+        string memory _area, 
+        string memory _creditAssigned, 
+        string memory _creationDate, 
+        string memory _updateDate) public  {
+
+        Project storage targetProject = projects[projectIdCounter];
+        targetProject.projectOwner = _projectOwner;
+        targetProject.projectApprover = _projectApprover;
+        targetProject.name = _name;
+        targetProject.projectOwner = _projectOwner;
+        targetProject.description = _description;
+        targetProject.documentation = _documentation;
+        targetProject.hash_documentation = _hash_documentation;
+        targetProject.state= _state;
+        targetProject.area= _area;
+        targetProject.creditAssigned= _creditAssigned;
+        targetProject.creationDate = _creationDate;
+        targetProject.updateDate = _updateDate;       
+    }
+
+    function deleteProject(uint256 id) public {
+        delete projects[id];
+    }
+
+    function getProjectsLength() public view returns(uint) {
+        return projectIds.length;
+    }
+
+     function getProjectList() public view returns(uint[] memory) {
+        return projectIds;
+    }
+}    

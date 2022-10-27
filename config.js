@@ -1,4 +1,4 @@
-const CONTACT_ADDRESS = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0';
+const CONTACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 
 const CONTACT_ABI = [
@@ -269,12 +269,125 @@ const CONTACT_ABI = [
 				"type": "uint256"
 			}
 		],
+		"name": "deleteProject",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
 		"name": "exists",
 		"outputs": [
 			{
 				"internalType": "bool",
 				"name": "",
 				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "getProjectById",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getProjectList",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getProjectsLength",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -374,6 +487,80 @@ const CONTACT_ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "projects",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "projectIdCounter",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "projectOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "projectApprover",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "documentation",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "hash_documentation",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "state",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "area",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "creditAssigned",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "creationDate",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "updateDate",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
@@ -467,6 +654,69 @@ const CONTACT_ABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_projectOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_projectApprover",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_documentation",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_hash_documentation",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_state",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_area",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_creditAssigned",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_creationDate",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_updateDate",
+				"type": "string"
+			}
+		],
+		"name": "setProject",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "bytes4",
 				"name": "interfaceId",
 				"type": "bytes4"
@@ -511,6 +761,69 @@ const CONTACT_ABI = [
 			}
 		],
 		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_projectOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_projectApprover",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_documentation",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_hash_documentation",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_state",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_area",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_creditAssigned",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_creationDate",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_updateDate",
+				"type": "string"
+			}
+		],
+		"name": "updateProject",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
