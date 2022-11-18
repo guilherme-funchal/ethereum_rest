@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 var address = "http://127.0.0.1:8545"
 
+const uploadUser = require('./middlewares/uploadFiles');
+const crypto = require('crypto');
+
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
@@ -179,7 +182,6 @@ app.get('/transacoes', async function (req, res) {
 app.get('/saldo', async function (req, res) {
   let conta = req.query.conta;
   let wallet = req.query.wallet;
-  console.log("conta: ", conta)
 
   var web3 = new Web3(address);
   var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
@@ -195,6 +197,22 @@ app.get('/saldo', async function (req, res) {
   console.log(saldo);
 });
 
+app.get('/saldo-contas', async function (req, res) {
+  let wallet = req.query.wallet;
+  let accounts = getUserData() 
+  let quantidade = accounts.length;
+
+  for (var i = 0; i < quantidade; i++) {
+    let conta = accounts[i].user_id;
+    var web3 = new Web3(address);
+    var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
+    let saldo = await contratoInteligente.methods.balanceOf(conta, wallet).call(function (err, res){});
+    saldo = Web3.utils.fromWei(saldo, 'ether');
+    accounts[i].saldo = saldo;
+  }  
+  res.status(200).send(JSON.stringify(accounts));
+});
+
 app.get('/projeto', async function (req, res) {
   var id = req.query.id;
   var web3 = new Web3(address);
@@ -207,8 +225,8 @@ app.get('/projeto', async function (req, res) {
     console.log("Projeto carregado")
   });
 
-  const projeto_identificado = {
-    projectIdCounter: projeto['0'],
+  const projeto_identificado = [{
+    id: projeto['0'],
     name: projeto['1'],	  
     projectOwner: projeto['2'],
     projectApprover: projeto['3'],
@@ -220,9 +238,9 @@ app.get('/projeto', async function (req, res) {
     creditAssigned: projeto['9'],
     creationDate: projeto['10'],
     updateDate: projeto['11'],
-  };
+  }];
 
-  res.status(200).send(projeto_identificado);
+  res.status(200).send(projeto_identificado).json;
 });
 
 app.get('/listarProjetos', async function (req, res) {
@@ -248,7 +266,7 @@ app.get('/listarProjetos', async function (req, res) {
 
     });
     projeto_identificado.push({
-      projectIdCounter: projeto['0'],
+      id: projeto['0'],
       name: projeto['1'],
       projectOwner: projeto['2'],
       projectApprover: projeto['3'],
@@ -364,9 +382,10 @@ app.post('/emitir', async function (req, res) {
   res.status(200).send(`Moeda incluída e minerada no bloco ${receipt.blockNumber}`);
 });
 app.patch('/projeto', async function (req, res) {
+  let id = req.body.id;
+  let name = req.body.name;
   let projectOwner = req.body.projectOwner;
   let projectApprover = req.body.projectApprover;
-  let name = req.body.name;
   let description = req.body.description;
   let documentation = req.body.documentation;
   let hash_documentation = req.body.hash_documentation;
@@ -390,9 +409,10 @@ app.patch('/projeto', async function (req, res) {
   var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
 
   const tx = contratoInteligente.methods.updateProject(
+    id,
+    name,
     projectOwner,
     projectApprover,
-    name,
     description,
     documentation,
     hash_documentation,
@@ -507,7 +527,7 @@ app.post('/transferir', async function (req, res) {
   let id = req.body.id;
   let amount = req.body.amount;
   amount = Web3.utils.toWei(amount, 'ether');
-  let data = req.body.data;
+//  let data = req.body.data;
 
   const network = process.env.ETHEREUM_NETWORK;
 
@@ -522,7 +542,7 @@ app.post('/transferir', async function (req, res) {
   web3.eth.accounts.wallet.add(signer);
   var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
 
-  const tx = contratoInteligente.methods.safeTransferFrom(from, to, id, amount, data);
+  const tx = contratoInteligente.methods.transferirValores(from, to, id, amount);
 
   const receipt = await tx
     .send({
@@ -609,6 +629,44 @@ app.post('/queimar', async function (req, res) {
     });
   console.log(`Moeda queimada no bloco ${receipt.blockNumber}`);
   res.status(200).send(`Moeda excluida e minerada no bloco ${receipt.blockNumber}`);
+});
+
+app.get('/upload/:file',function(req,res) {
+    const file = req.params.file    
+    // Download function provided by express
+    const targget = "public/upload/users"+'/' + file
+    res.download(targget, function(err) {
+        
+        if(err) {
+            console.log(err);
+            return res.status(400).json({
+              erro: true,
+              mensagem: "Erro: Arquivo não pode ser encontrado!"
+            });
+        }
+    })
+})
+
+app.post("/upload", uploadUser.single('file'), async (req, res) => {
+    console.log(req.file);
+
+    if (req.file) {
+        const fileBuffer = fs.readFileSync(req.file.path);
+        const hash = crypto.createHash('sha256');
+        const finalHex = hash.update(fileBuffer).digest('hex');
+
+        return res.json({
+            erro: false,
+            path: req.file.path,
+            file: req.file.filename,
+            hash_file: finalHex
+        });
+    }
+
+    return res.status(400).json({
+        erro: true,
+        mensagem: "Erro: Upload não realizado com sucesso!"
+    });
 });
 
 

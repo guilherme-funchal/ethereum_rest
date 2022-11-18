@@ -1,4 +1,4 @@
-const CONTACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+const CONTACT_ADDRESS = '0xc6e7DF5E7b4f2A278906862b61205850344D4e7d'; 
 
 
 const CONTACT_ABI = [
@@ -487,80 +487,6 @@ const CONTACT_ABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "projects",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "projectIdCounter",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "projectOwner",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "projectApprover",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "description",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "documentation",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "hash_documentation",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "state",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "area",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "creditAssigned",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "creationDate",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "updateDate",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
@@ -769,6 +695,44 @@ const CONTACT_ABI = [
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "_from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "transferirValores",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
 				"name": "_projectOwner",
 				"type": "address"
 			},
@@ -776,11 +740,6 @@ const CONTACT_ABI = [
 				"internalType": "address",
 				"name": "_projectApprover",
 				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
 			},
 			{
 				"internalType": "string",

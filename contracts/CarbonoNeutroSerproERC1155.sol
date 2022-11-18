@@ -9,7 +9,7 @@ import "hardhat/console.sol";
 
 contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC1155Supply {
     struct Project {
-        uint projectIdCounter;
+        uint id;
         address projectOwner;
         address projectApprover;
         string name;
@@ -26,8 +26,6 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
        mapping(uint => Project) private projects;
        uint[] private projectIds;
        uint private projectIdCounter = 0;
-
-
 
     constructor() ERC1155("") {
     }    
@@ -73,10 +71,10 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         string memory _creditAssigned, 
         string memory _creationDate, 
         string memory _updateDate) public {
+        
         projectIdCounter++;
-
         Project memory newProject = Project({
-            projectIdCounter: projectIdCounter,
+            id: projectIdCounter,
             projectOwner: _projectOwner,
             projectApprover: _projectApprover,
             name: _name,
@@ -90,16 +88,16 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
             updateDate: _updateDate
         });
 
-        projectIds.push(newProject.projectIdCounter);
-        projects[newProject.projectIdCounter] = newProject;
-
+        projectIds.push(newProject.id);
+        projects[newProject.id] = newProject;
+        
     }
 
     function getProjectById(uint id) public view returns(
         uint, string memory, address, address, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory) {
         Project memory project = projects[id];
         return (
-            project.projectIdCounter,
+            project.id,
             project.name,
             project.projectOwner,
             project.projectApprover,
@@ -115,9 +113,10 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
     }
 
     function updateProject(
-        address _projectOwner, 
-        address _projectApprover,
+        uint id,
         string memory _name, 
+        address _projectOwner,
+        address _projectApprover, 
         string memory _description, 
         string memory _documentation,
         string memory _hash_documentation, 
@@ -127,11 +126,11 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         string memory _creationDate, 
         string memory _updateDate) public  {
 
-        Project storage targetProject = projects[projectIdCounter];
-        targetProject.projectOwner = _projectOwner;
-        targetProject.projectApprover = _projectApprover;
+        Project storage targetProject = projects[id];
+
         targetProject.name = _name;
         targetProject.projectOwner = _projectOwner;
+        targetProject.projectApprover = _projectApprover;
         targetProject.description = _description;
         targetProject.documentation = _documentation;
         targetProject.hash_documentation = _hash_documentation;
@@ -153,4 +152,10 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
      function getProjectList() public view returns(uint[] memory) {
         return projectIds;
     }
+
+    function transferirValores(address _from, address _to, uint256 _id, uint256 _value) external {
+        // MUST emit event
+        emit TransferSingle(msg.sender, _from, _to, _id, _value);
+    }
+
 }    
