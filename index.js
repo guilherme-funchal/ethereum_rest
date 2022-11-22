@@ -527,7 +527,7 @@ app.post('/transferir', async function (req, res) {
   let id = req.body.id;
   let amount = req.body.amount;
   amount = Web3.utils.toWei(amount, 'ether');
-//  let data = req.body.data;
+  let data = req.body.data;
 
   const network = process.env.ETHEREUM_NETWORK;
 
@@ -542,7 +542,7 @@ app.post('/transferir', async function (req, res) {
   web3.eth.accounts.wallet.add(signer);
   var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
 
-  const tx = contratoInteligente.methods.transferirValores(from, to, id, amount);
+  const tx = contratoInteligente.methods.transferirValores(from, to, id, amount, data);
 
   const receipt = await tx
     .send({
