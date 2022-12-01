@@ -166,8 +166,11 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         return projectIds;
     }
 
-    function transferirValores(address _from, address _to, uint _id, uint256 _amount, bytes memory _data) external {
-        safeTransferFrom(_from, _to, _id, _amount, _data);
+    function transferirValores(address _from, address _to, uint _id, uint256 _amount) external {
+    // MUST emit event
+    //  safeTransferFrom(_from, _to, _id, _amount, _data);
+        address operator = _msgSender();
+        emit TransferSingle(operator, _from, _to, _id, _amount);
     }
 
 }    
