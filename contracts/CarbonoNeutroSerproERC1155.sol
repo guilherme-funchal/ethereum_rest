@@ -1,16 +1,18 @@
 pragma solidity ^0.8.17;
 
+// SPDX-License-Identifier: MIT
+
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
-import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
 import "hardhat/console.sol";
 
 contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC1155Supply {
     struct Project {
         uint id;
         address projectOwner;
+        address projectCreator;
         address projectApprover;
         string name;
         string description;
@@ -20,6 +22,7 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         string area;
         string creditAssigned;
         string creationDate;
+        string retired;
         string updateDate;
     }
     
@@ -61,6 +64,7 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
 
     function setProject(
         address _projectOwner,
+        address _projectCreator,
         address _projectApprover,
         string memory _name, 
         string memory _description, 
@@ -70,12 +74,14 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         string memory _area, 
         string memory _creditAssigned, 
         string memory _creationDate, 
+        string memory _retired, 
         string memory _updateDate) public {
         
         projectIdCounter++;
         Project memory newProject = Project({
             id: projectIdCounter,
             projectOwner: _projectOwner,
+            projectCreator: _projectCreator,
             projectApprover: _projectApprover,
             name: _name,
             description: _description,
@@ -85,6 +91,7 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
             area: _area,
             creditAssigned: _creditAssigned,
             creationDate: _creationDate, 
+            retired: _retired, 
             updateDate: _updateDate
         });
 
@@ -94,12 +101,13 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
     }
 
     function getProjectById(uint id) public view returns(
-        uint, string memory, address, address, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory) {
+        uint, string memory, address, address, address, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory) {
         Project memory project = projects[id];
         return (
             project.id,
             project.name,
             project.projectOwner,
+            project.projectCreator,
             project.projectApprover,
             project.description,
             project.documentation,
@@ -108,6 +116,7 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
             project.area,
             project.creditAssigned,
             project.creationDate,
+            project.retired,
             project.updateDate
         );
     }
@@ -116,6 +125,7 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         uint id,
         string memory _name, 
         address _projectOwner,
+        address _projectCreator,
         address _projectApprover, 
         string memory _description, 
         string memory _documentation,
@@ -124,12 +134,14 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         string memory _area, 
         string memory _creditAssigned, 
         string memory _creationDate, 
+        string memory _retired,
         string memory _updateDate) public  {
 
         Project storage targetProject = projects[id];
 
         targetProject.name = _name;
         targetProject.projectOwner = _projectOwner;
+        targetProject.projectCreator = _projectCreator;
         targetProject.projectApprover = _projectApprover;
         targetProject.description = _description;
         targetProject.documentation = _documentation;
@@ -138,6 +150,7 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         targetProject.area= _area;
         targetProject.creditAssigned= _creditAssigned;
         targetProject.creationDate = _creationDate;
+        targetProject.retired = _retired;
         targetProject.updateDate = _updateDate;       
     }
 

@@ -324,6 +324,16 @@ const CONTACT_ABI = [
 				"type": "address"
 			},
 			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
 				"internalType": "string",
 				"name": "",
 				"type": "string"
@@ -586,6 +596,11 @@ const CONTACT_ABI = [
 			},
 			{
 				"internalType": "address",
+				"name": "_projectCreator",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
 				"name": "_projectApprover",
 				"type": "address"
 			},
@@ -627,6 +642,11 @@ const CONTACT_ABI = [
 			{
 				"internalType": "string",
 				"name": "_creationDate",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_retired",
 				"type": "string"
 			},
 			{
@@ -695,28 +715,23 @@ const CONTACT_ABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "from",
+				"name": "_from",
 				"type": "address"
 			},
 			{
 				"internalType": "address",
-				"name": "to",
+				"name": "_to",
 				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "id",
+				"name": "_id",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "amount",
+				"name": "_value",
 				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "data",
-				"type": "bytes"
 			}
 		],
 		"name": "transferirValores",
@@ -739,6 +754,11 @@ const CONTACT_ABI = [
 			{
 				"internalType": "address",
 				"name": "_projectOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_projectCreator",
 				"type": "address"
 			},
 			{
@@ -779,6 +799,11 @@ const CONTACT_ABI = [
 			{
 				"internalType": "string",
 				"name": "_creationDate",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_retired",
 				"type": "string"
 			},
 			{
