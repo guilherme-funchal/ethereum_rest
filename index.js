@@ -141,7 +141,7 @@ app.get('/account/find/:user_id', async function (req, res) {
 app.post('/account/add', (req, res) => {
   const existUsers = getUserData()
   const userData = req.body
-  if (userData.user_id == null || userData.profile == null || userData.desc == null || userData.email == null || userData.doc == null || userData.created_at == null || userData.updated_at == null || userData.last_login == null) {
+  if (userData.user_id == null || userData.profile == null || userData.desc == null || userData.email == null || userData.doc == null || userData.created_at == null || userData.updated_at == null || userData.last_login == null|| userData.image == null) {
     return res.status(401).send({ error: true, msg: 'Dado do usuário faltando' })
   }
 
@@ -225,6 +225,7 @@ app.get('/saldo', async function (req, res) {
     res.status(200).send(JSON.stringify(accounts));
   });
 
+  
   app.get('/projeto', async function (req, res) {
     var id = req.query.id;
     var web3 = new Web3(address);
@@ -249,12 +250,9 @@ app.get('/saldo', async function (req, res) {
       state: projeto['8'],
       area: projeto['9'],
       creditAssigned: projeto['10'],
-      creationDate: projeto['11'],
-      retired: projeto['12'],
-      updateDate: projeto['13'],
+      updateDate: projeto['11'],
     }];
-
-    res.status(200).send(projeto_identificado).json;
+    res.status(200).send(projeto_identificado);
   });
 
   app.get('/listarProjetos', async function (req, res) {
@@ -291,9 +289,7 @@ app.get('/saldo', async function (req, res) {
         state: projeto['8'],
         area: projeto['9'],
         creditAssigned: projeto['10'],
-        creationDate: projeto['11'],
-        retired: projeto['12'],
-        updateDate: projeto['13'],
+        updateDate: projeto['11'],
       });
     }
     res.status(200).send(projeto_identificado);
@@ -326,6 +322,7 @@ app.get('/saldo', async function (req, res) {
     const created_at = req.params.created_at
     const updated_at = req.params.updated_at
     const last_login = req.params.last_login
+    const image = req.params.image
     const userData = req.body
     const existUsers = getUserData()
     const findExist = existUsers.find(user => user.user_id === user_id)
@@ -410,8 +407,6 @@ app.get('/saldo', async function (req, res) {
     let state = req.body.state;
     let area = req.body.area;
     let creditAssigned = req.body.creditAssigned;
-    let creationDate = req.body.creationDate;
-    let retired = req.body.retired;
     let updateDate = req.body.updateDate;
 
     const network = process.env.ETHEREUM_NETWORK;
@@ -439,8 +434,6 @@ app.get('/saldo', async function (req, res) {
       state,
       area,
       creditAssigned,
-      creationDate,
-      retired,
       updateDate
     );
 
@@ -467,8 +460,6 @@ app.get('/saldo', async function (req, res) {
     let state = req.body.state;
     let area = req.body.area;
     let creditAssigned = req.body.creditAssigned;
-    let creationDate = req.body.creationDate;
-    let retired = req.body.retired;
     let updateDate = req.body.updateDate;
 
     const network = process.env.ETHEREUM_NETWORK;
@@ -495,8 +486,6 @@ app.get('/saldo', async function (req, res) {
       state,
       area,
       creditAssigned,
-      creationDate,
-      retired,
       updateDate
     );
 
@@ -552,7 +541,7 @@ app.get('/saldo', async function (req, res) {
     let id = req.body.id;
     let amount = req.body.amount;
     amount = Web3.utils.toWei(amount, 'ether');
-    // let data = req.body.data;
+    let data = req.body.data;
 
     const network = process.env.ETHEREUM_NETWORK;
 
@@ -564,10 +553,14 @@ app.get('/saldo', async function (req, res) {
     const signer = web3.eth.accounts.privateKeyToAccount(
       process.env.SIGNER_PRIVATE_KEY
     );
+    
     web3.eth.accounts.wallet.add(signer);
-    var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
 
-    const tx = contratoInteligente.methods.transferirValores(from, to, id, amount);
+//    var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
+    
+    var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
+     
+    const tx = contratoInteligente.methods.transferirValores(from, to, id, amount, data);
 
     const receipt = await tx
       .send({

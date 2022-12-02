@@ -21,8 +21,6 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         string state;
         string area;
         string creditAssigned;
-        string creationDate;
-        string retired;
         string updateDate;
     }
     
@@ -73,8 +71,6 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         string memory _state, 
         string memory _area, 
         string memory _creditAssigned, 
-        string memory _creationDate, 
-        string memory _retired, 
         string memory _updateDate) public {
         
         projectIdCounter++;
@@ -90,8 +86,6 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
             state: _state,
             area: _area,
             creditAssigned: _creditAssigned,
-            creationDate: _creationDate, 
-            retired: _retired, 
             updateDate: _updateDate
         });
 
@@ -101,7 +95,7 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
     }
 
     function getProjectById(uint id) public view returns(
-        uint, string memory, address, address, address, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory) {
+        uint, string memory, address, address, address, string memory, string memory, string memory, string memory, string memory, string memory, string memory) {
         Project memory project = projects[id];
         return (
             project.id,
@@ -115,8 +109,6 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
             project.state,
             project.area,
             project.creditAssigned,
-            project.creationDate,
-            project.retired,
             project.updateDate
         );
     }
@@ -133,8 +125,6 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         string memory _state, 
         string memory _area, 
         string memory _creditAssigned, 
-        string memory _creationDate, 
-        string memory _retired,
         string memory _updateDate) public  {
 
         Project storage targetProject = projects[id];
@@ -149,8 +139,6 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         targetProject.state= _state;
         targetProject.area= _area;
         targetProject.creditAssigned= _creditAssigned;
-        targetProject.creationDate = _creationDate;
-        targetProject.retired = _retired;
         targetProject.updateDate = _updateDate;       
     }
 
@@ -162,13 +150,12 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         return projectIds.length;
     }
 
-     function getProjectList() public view returns(uint[] memory) {
+    function getProjectList() public view returns(uint[] memory) {
         return projectIds;
     }
 
-    function transferirValores(address _from, address _to, uint256 _id, uint256 _value) external {
-        // MUST emit event
-        emit TransferSingle(msg.sender, _from, _to, _id, _value);
+    function transferirValores(address from, address to, uint id, uint256 amount, bytes memory data) external {
+        _safeTransferFrom(from, to, id, amount, data);
     }
 
 }    

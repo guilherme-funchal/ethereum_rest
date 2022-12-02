@@ -362,16 +362,6 @@ const CONTACT_ABI = [
 				"internalType": "string",
 				"name": "",
 				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -641,16 +631,6 @@ const CONTACT_ABI = [
 			},
 			{
 				"internalType": "string",
-				"name": "_creationDate",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_retired",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
 				"name": "_updateDate",
 				"type": "string"
 			}
@@ -715,23 +695,28 @@ const CONTACT_ABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "_from",
+				"name": "from",
 				"type": "address"
 			},
 			{
 				"internalType": "address",
-				"name": "_to",
+				"name": "to",
 				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_id",
+				"name": "id",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_value",
+				"name": "amount",
 				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
 			}
 		],
 		"name": "transferirValores",
@@ -798,16 +783,6 @@ const CONTACT_ABI = [
 			},
 			{
 				"internalType": "string",
-				"name": "_creationDate",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_retired",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
 				"name": "_updateDate",
 				"type": "string"
 			}
@@ -837,7 +812,6 @@ const CONTACT_ABI = [
 		"type": "function"
 	}
 ];
-
 module.exports = {
 	CONTACT_ABI,
 	CONTACT_ADDRESS,
