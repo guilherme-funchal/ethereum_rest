@@ -23,9 +23,18 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         string creditAssigned;
         string updateDate;
     }
+
+    struct Credit {
+        uint id;
+        string creditAssigned;
+        string txhash;
+        string bloc;
+    }
     
        mapping(uint => Project) private projects;
+       mapping(uint => Credit) private credits;
        uint[] private projectIds;
+       uint[] private creditIds;
        uint private projectIdCounter = 0;
 
     constructor() ERC1155("") {
@@ -92,6 +101,34 @@ contract CarbonoNeutroSerproERC1155 is ERC1155, ERC1155Burnable, Ownable, ERC115
         projectIds.push(newProject.id);
         projects[newProject.id] = newProject;
         
+    }
+
+    function setCredit(
+        uint _id,
+        string memory _creditAssigned,
+        string memory _txhash, 
+        string memory _block) public {
+
+        Credit memory newCredit = Credit({
+            id: _id,
+            creditAssigned: _creditAssigned,
+            txhash: _txhash,
+            bloc: _block
+        });
+
+        creditIds.push(newCredit.id);
+        credits[newCredit.id] = newCredit;    
+    }
+
+    function getCreditById(uint id) public view returns(
+        uint, string memory, string memory, string memory) {
+        Credit memory credit = credits[id];
+        return (
+            credit.id,
+            credit.creditAssigned,
+            credit.txhash,
+            credit.bloc
+        );
     }
 
     function getProjectById(uint id) public view returns(

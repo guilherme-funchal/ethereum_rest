@@ -1,8 +1,7 @@
 const CONTACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3'; 
 
 
-const CONTACT_ABI = [
-	{
+const CONTACT_ABI = [{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
@@ -301,6 +300,40 @@ const CONTACT_ABI = [
 				"type": "uint256"
 			}
 		],
+		"name": "getCreditById",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
 		"name": "getProjectById",
 		"outputs": [
 			{
@@ -573,6 +606,34 @@ const CONTACT_ABI = [
 			}
 		],
 		"name": "setApprovalForAll",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_creditAssigned",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_txhash",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_block",
+				"type": "string"
+			}
+		],
+		"name": "setCredit",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

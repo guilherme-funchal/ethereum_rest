@@ -225,7 +225,28 @@ app.get('/saldo', async function (req, res) {
     res.status(200).send(JSON.stringify(accounts));
   });
 
-  
+  app.get('/credito', async function (req, res) {
+    var id = req.query.id;
+    var web3 = new Web3(address);
+    var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
+    let credito = await contratoInteligente.methods.getCreditById(id).call(function (err, res) {
+      if (err) {
+        console.log("Ocorreu um erro", err)
+        return
+      }
+      console.log("credito carregado")
+    });
+
+    const credito_adquirido = [{
+      id: credito['0'],
+      creditAssigned: credito['1'],
+      txhash: credito['2'],
+      block: credito['3'],
+    }];
+
+    res.status(200).send(credito_adquirido);
+  });
+
   app.get('/projeto', async function (req, res) {
     var id = req.query.id;
     var web3 = new Web3(address);
@@ -392,7 +413,12 @@ app.get('/saldo', async function (req, res) {
         console.log(`Dados enviados com sucesso ...`);
       });
     console.log(`Dados incluídos no bloco ${receipt.blockNumber}`);
-    res.status(200).send(`Moeda incluída e minerada no bloco ${receipt.blockNumber}`);
+    // res.status(200).send(`Moeda incluída e minerada no bloco ${receipt.blockNumber}`);
+    
+    res.status(200).json({
+      txhash: receipt.transactionHash,
+      block: receipt.blockNumber
+    });
   });
 
   app.patch('/projeto', async function (req, res) {
@@ -448,6 +474,43 @@ app.get('/saldo', async function (req, res) {
     console.log(`Dados inseridos -> ${receipt.blockNumber}`);
     res.status(200).send(`Dados inseridos no bloco ${receipt.blockNumber}`);
   });
+
+  app.post('/credito', async function (req, res) {
+    let id = req.body.id;
+    let creditAssigned = req.body.creditAssigned;
+    let txhash = req.body.txhash;
+    let block = req.body.block;
+
+    const network = process.env.ETHEREUM_NETWORK;
+
+    const web3 = new Web3(
+      new Web3.providers.HttpProvider(
+        `${address}`
+      )
+    );
+    const signer = web3.eth.accounts.privateKeyToAccount(
+      process.env.SIGNER_PRIVATE_KEY
+    );
+    web3.eth.accounts.wallet.add(signer);
+    var contratoInteligente = new web3.eth.Contract(CONTACT_ABI.CONTACT_ABI, CONTACT_ADDRESS.CONTACT_ADDRESS);
+
+    const tx = contratoInteligente.methods.setCredit(
+      id,
+      creditAssigned,
+      txhash,
+      block
+    );
+    const receipt = await tx
+    .send({
+      from: signer.address,
+      gas: await tx.estimateGas(),
+    })
+    .once("transactionHash", (txhash) => {
+      console.log(`Dados enviados com sucesso ...`);
+    });
+  console.log(`Dados inseridos -> ${receipt.blockNumber}`);
+  res.status(200).send(`Dados inseridos no bloco ${receipt.blockNumber}`);
+});
 
   app.post('/projeto', async function (req, res) {
     let projectOwner = req.body.projectOwner;
@@ -568,10 +631,16 @@ app.get('/saldo', async function (req, res) {
         gas: await tx.estimateGas(),
       })
       .once("transactionHash", (txhash) => {
-        console.log(`Moeda transferida com sucesso ...`);
+        console.log(`Moeda transferida com sucesso`, txhash);
       });
+
     console.log(`Moeda queimada no bloco ${receipt.blockNumber}`);
-    res.status(200).send(`Moeda transferida com sucesso no bloco ${receipt.blockNumber}`);
+    // res.status(200).send(`Moeda transferida com sucesso no bloco ${receipt.blockNumber}`);
+    res.status(200).json({
+      txhash: receipt.transactionHash,
+      block: receipt.blockNumber
+    });
+
   });
 
   app.post('/conta', async function (req, res) {
