@@ -930,9 +930,9 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"CarbonoNeutroSerproERC1155.sol": "CarbonoNeutroSerproERC1155"
+			"contracts/CarbonoNeutroSerproERC1155.sol": "CarbonoNeutroSerproERC1155"
 		},
-		"evmVersion": "london",
+		"evmVersion": "byzantium",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -1032,7 +1032,7 @@
 				"dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
 			]
 		},
-		"CarbonoNeutroSerproERC1155.sol": {
+		"contracts/CarbonoNeutroSerproERC1155.sol": {
 			"keccak256": "0x650b0d8603a4b74aa8b91bf2753616df10917b9947fc31b1c200db80f301f3cf",
 			"license": "MIT",
 			"urls": [
